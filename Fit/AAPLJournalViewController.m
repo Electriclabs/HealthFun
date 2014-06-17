@@ -119,7 +119,7 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
 - (double)newCaffeineLevelWithPreviousSample:(AAPLConsumedFoodItem *)sample newFoodItem:(AAPLFoodItem *)foodItem
 {
     double initialCaffeineLevel = sample.cumulativeCaffeineLevel;
-    NSTimeInterval timeSinceConsumption = [sample.date timeIntervalSinceNow];
+    NSTimeInterval timeSinceConsumption = -1 * [sample.date timeIntervalSinceNow];
     NSTimeInterval halfLife = 5.7 * 3600;
 
     double currentCaffeineLevel = foodItem.caffeineLevel + initialCaffeineLevel * pow(0.5, timeSinceConsumption / halfLife);
