@@ -110,6 +110,23 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
 
 #pragma mark - UITableViewDelegate
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+  UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 280, 40.0f)];
+  label.text = [NSString stringWithFormat:@"Your current caffeine level is %@", @"0.0mg"];
+  label.font = [UIFont boldSystemFontOfSize:16.0f];
+
+  UIView *wrapper = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 40.0f)];
+  wrapper.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1];
+  [wrapper addSubview:label];
+  return wrapper;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+  return 40.0f;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.foodItems.count;
 }
