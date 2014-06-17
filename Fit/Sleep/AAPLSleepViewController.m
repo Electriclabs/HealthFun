@@ -9,6 +9,9 @@
 #import "AAPLSleepViewController.h"
 #import "APPLSleepViewModel.h"
 
+@import  HealthKit;
+
+
 @interface AAPLSleepViewController ()<APPLSleepViewModelDelegate>
 @property (nonatomic, strong) APPLSleepViewModel *sleepViewModel;
 @end
@@ -31,7 +34,7 @@
 }
 
 - (void) sleepModel:(APPLSleepViewModel*)sleepModel didGetDayStarting:(NSDate*)startDate sleepPeriods:(NSArray*)sleepPeriods {
-    
+   
 }
 
 @end

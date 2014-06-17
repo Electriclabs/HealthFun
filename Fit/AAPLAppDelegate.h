@@ -10,9 +10,12 @@
 
 @import UIKit;
 
+@class HKHealthStore;
+
 @interface AAPLAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, readonly) HKHealthStore *healthStore;
 
 @end
 

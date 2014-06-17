@@ -7,8 +7,10 @@
 //
 
 #import "APPLSleepViewModel.h"
+#import "AAPLAppDelegate.h"
 
 @import CoreMotion;
+@import HealthKit;
 
 @interface APPLSleepViewModel ()
 @property (nonatomic, strong) CMPedometer *pedometer;
@@ -37,6 +39,8 @@
     
     NSMutableArray *sleepPeriods = [NSMutableArray array];
     
+    HKCategoryType *sleep = [HKCategoryType categoryTypeForIdentifier:HKCategoryTypeIdentifierSleepAnalysis];
+    
     __block NSInteger count = 0;
     for (NSInteger i = 0; i < 24; i++) {
         NSDateComponents *components = [[NSDateComponents alloc] init];
@@ -49,7 +53,18 @@
         [_pedometer queryPedometerDataFromDate:startDate toDate:endDate withHandler:^(CMPedometerData *pedometerData, NSError *error) {
             if ([pedometerData.numberOfSteps integerValue] > 10) {
                 sleepPeriods[i] = @1;
+            } else {
+                
+                HKCategorySample *sample = [HKCategorySample  categorySampleWithType:sleep value:HKCategoryValueSleepAnalysisAsleep startDate:startDate endDate:endDate];
+                AAPLAppDelegate *appDelegate = (AAPLAppDelegate*) [[UIApplication sharedApplication] delegate];
+                
+                
+                [appDelegate.healthStore  saveObject:sample withCompletion:^(BOOL success, NSError *error) {
+                    
+                }];
             }
+            
+          
             
             if (++count == 24) {
                 if ([_delegate respondsToSelector:@selector(sleepModel:didGetDayStarting:sleepPeriods:)]) {
