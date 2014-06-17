@@ -14,11 +14,13 @@
 @import HealthKit;
 
 NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
+NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeineLevel";
 
 
 @interface AAPLJournalViewController()
 
 @property (nonatomic) NSMutableArray *foodItems;
+@property (nonatomic) HKQuantity *cumulativeCaffeineLevel;
 
 @end
 
@@ -63,7 +65,9 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.foodItems removeAllObjects];
-            
+			
+            self.cumulativeCaffeineLevel = [(HKQuantitySample *)results.firstObject metadata][AAPLCumulativeCaffeineLevelIdentifier];
+			
             for (HKQuantitySample *sample in results) {
                 NSString *foodName = sample.metadata[HKMetadataKeyFoodType];
                 double caffeineLevel = [sample.quantity doubleValueForUnit:[HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli]];
@@ -83,11 +87,14 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
 - (void)addFoodItem:(AAPLFoodItem *)foodItem {
     HKQuantityType *quantityType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryChloride];
 
+    HKQuantitySample *lastMeasurement = self.foodItems.firstObject;
+    NSNumber *cumulativeValue = [self newCaffeineLevelWithPreviousSample:lastMeasurement newFoodItem:foodItem];
+	
     HKQuantity *quantity = [HKQuantity quantityWithUnit:[HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli] doubleValue:foodItem.caffeineLevel];
     
     NSDate *now = [NSDate date];
 
-    NSDictionary *metadata = @{ HKMetadataKeyFoodType:foodItem.name };
+    NSDictionary *metadata = @{ HKMetadataKeyFoodType:foodItem.name, AAPLCumulativeCaffeineLevelIdentifier:cumulativeValue };
     
     HKQuantitySample *calorieSample = [HKQuantitySample quantitySampleWithType:quantityType quantity:quantity startDate:now endDate:now metadata:metadata];
     
@@ -106,6 +113,18 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
             }
         });
     }];
+}
+
+- (NSNumber *)newCaffeineLevelWithPreviousSample:(HKQuantitySample *)sample newFoodItem:(AAPLFoodItem *)foodItem
+{
+    HKUnit *mgUnit = [HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli];
+    double initialCaffeineLevel = [sample.quantity doubleValueForUnit:mgUnit];
+    NSTimeInterval timeSinceConsumption = [sample.endDate timeIntervalSinceNow];
+    NSTimeInterval halfLife = 5.7 * 3600;
+
+    double currentCaffeineLevel = foodItem.caffeineLevel + initialCaffeineLevel * pow(0.5, timeSinceConsumption / halfLife);
+
+    return [NSNumber numberWithDouble:currentCaffeineLevel];
 }
 
 #pragma mark - UITableViewDelegate
