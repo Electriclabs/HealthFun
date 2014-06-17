@@ -122,7 +122,7 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
     cell.textLabel.text = foodItem.name;
 
     NSMassFormatter *massFormatter = [self energyFormatter];
-    cell.detailTextLabel.text = [massFormatter stringFromValue:foodItem.caffeineLevel unit:NSMassFormatterUnitGram];
+    cell.detailTextLabel.text = [massFormatter stringFromValue:foodItem.caffeineLevel / 1000 unit:NSMassFormatterUnitGram];
 
     return cell;
 }
