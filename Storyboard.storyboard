@@ -317,6 +317,7 @@
         <scene sceneID="370-JX-mmR">
             <objects>
                 <tabBarController id="PsJ-uz-QhX" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="wlC-eZ-N8v"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Jay-EI-8gN">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -327,11 +328,31 @@
                         <segue destination="WpR-zI-EVT" kind="relationship" relationship="viewControllers" id="ZQy-uD-ReX"/>
                         <segue destination="MDa-JJ-dPR" kind="relationship" relationship="viewControllers" id="R3f-9L-KDo"/>
                         <segue destination="bu6-Mt-T9C" kind="relationship" relationship="viewControllers" id="3hS-4g-1w0"/>
+                        <segue destination="bEk-we-e9m" kind="relationship" relationship="viewControllers" id="9tY-Ft-raj"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lyK-MX-w9s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-193" y="60"/>
+            <point key="canvasLocation" x="-3" y="19"/>
+        </scene>
+        <!--Sleep View Controller-->
+        <scene sceneID="eKv-v0-M3l">
+            <objects>
+                <viewController id="Vt1-uB-FNa" customClass="AAPLSleepViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="lTd-YS-HFH"/>
+                        <viewControllerLayoutGuide type="bottom" id="hQr-4y-skb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="bRP-O4-Jj5">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="on2-qU-bXd"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="P9l-0J-CPQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1175" y="62"/>
         </scene>
         <!--Navigation Controller - Journal-->
         <scene sceneID="oEl-2U-Ihb">
@@ -389,6 +410,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sDW-Ey-uWT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-635" y="766"/>
+        </scene>
+        <!--Navigation Controller - Sleep-->
+        <scene sceneID="Q8y-6t-VAm">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bEk-we-e9m" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Sleep" id="oxH-fc-DB1"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="bTa-VO-OXT">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Vt1-uB-FNa" kind="relationship" relationship="rootViewController" id="3B0-Ff-U11"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N4J-6m-fa5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="643" y="62"/>
         </scene>
     </scenes>
     <resources>
