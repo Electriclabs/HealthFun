@@ -12,10 +12,9 @@
 
 @interface AAPLFoodItem : NSObject
 
-+ (instancetype)foodItemWithName:(NSString *)name caffeineLevel:(double)caffeineLevel date:(NSDate *)date;
++ (instancetype)foodItemWithName:(NSString *)name caffeineLevel:(double)caffeineLevel;
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic) double caffeineLevel;
-@property (nonatomic) NSDate *date;
 
 @end

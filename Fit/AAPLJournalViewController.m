@@ -10,7 +10,7 @@
 
 #import "AAPLJournalViewController.h"
 #import "AAPLFoodPickerViewController.h"
-#import "AAPLFoodItem.h"
+#import "AAPLConsumedFoodItem.h"
 @import HealthKit;
 
 NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
@@ -20,7 +20,6 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
 @interface AAPLJournalViewController()
 
 @property (nonatomic) NSMutableArray *foodItems;
-@property (nonatomic) NSNumber *cumulativeCaffeineLevel;
 
 @end
 
@@ -66,13 +65,12 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.foodItems removeAllObjects];
 			
-            self.cumulativeCaffeineLevel = [(HKQuantitySample *)results.lastObject metadata][AAPLCumulativeCaffeineLevelIdentifier];
-			
             for (HKQuantitySample *sample in results) {
                 NSString *foodName = sample.metadata[HKMetadataKeyFoodType];
                 double caffeineLevel = [sample.quantity doubleValueForUnit:[HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli]];
-                
-              AAPLFoodItem *foodItem = [AAPLFoodItem foodItemWithName:foodName caffeineLevel:caffeineLevel date:sample.endDate];
+                double cumulativeCaffeineLevel = [sample.metadata[AAPLCumulativeCaffeineLevelIdentifier] doubleValue];
+				
+                AAPLConsumedFoodItem *foodItem = [AAPLConsumedFoodItem foodItemWithName:foodName caffeineLevel:caffeineLevel cumulativeCaffeineLevel:cumulativeCaffeineLevel date:sample.endDate];
                 
                 [self.foodItems addObject:foodItem];
             }
@@ -85,20 +83,18 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
 }
 
 - (void)addFoodItem:(AAPLFoodItem *)originalFoodItem {
-    AAPLFoodItem *foodItem = [AAPLFoodItem foodItemWithName:originalFoodItem.name caffeineLevel:originalFoodItem.caffeineLevel
-                                                       date:[NSDate date]];
 
+    NSDate *now = [NSDate date];
     HKQuantityType *quantityType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryChloride];
 
-    AAPLFoodItem *lastMeasurement = self.foodItems.firstObject;
-    NSNumber *cumulativeValue = [self newCaffeineLevelWithPreviousSample:lastMeasurement newFoodItem:foodItem];
-  _cumulativeCaffeineLevel = cumulativeValue;
+    AAPLConsumedFoodItem *lastMeasurement = self.foodItems.firstObject;
+    double cumulativeValue = [self newCaffeineLevelWithPreviousSample:lastMeasurement newFoodItem:originalFoodItem];
+
+    AAPLConsumedFoodItem *foodItem = [AAPLConsumedFoodItem foodItemWithName:originalFoodItem.name caffeineLevel:originalFoodItem.caffeineLevel cumulativeCaffeineLevel:cumulativeValue date:now];
 	
     HKQuantity *quantity = [HKQuantity quantityWithUnit:[HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli] doubleValue:foodItem.caffeineLevel];
-    
-    NSDate *now = [NSDate date];
 
-    NSDictionary *metadata = @{ HKMetadataKeyFoodType:foodItem.name, AAPLCumulativeCaffeineLevelIdentifier:cumulativeValue };
+    NSDictionary *metadata = @{ HKMetadataKeyFoodType:foodItem.name, AAPLCumulativeCaffeineLevelIdentifier:@(cumulativeValue) };
     
     HKQuantitySample *calorieSample = [HKQuantitySample quantitySampleWithType:quantityType quantity:quantity startDate:now endDate:now metadata:metadata];
     
@@ -120,15 +116,15 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
     }];
 }
 
-- (NSNumber *)newCaffeineLevelWithPreviousSample:(AAPLFoodItem *)sample newFoodItem:(AAPLFoodItem *)foodItem
+- (double)newCaffeineLevelWithPreviousSample:(AAPLConsumedFoodItem *)sample newFoodItem:(AAPLFoodItem *)foodItem
 {
-    double initialCaffeineLevel = sample.caffeineLevel;
+    double initialCaffeineLevel = sample.cumulativeCaffeineLevel;
     NSTimeInterval timeSinceConsumption = [sample.date timeIntervalSinceNow];
     NSTimeInterval halfLife = 5.7 * 3600;
 
     double currentCaffeineLevel = foodItem.caffeineLevel + initialCaffeineLevel * pow(0.5, timeSinceConsumption / halfLife);
 
-    return [NSNumber numberWithDouble:currentCaffeineLevel];
+    return currentCaffeineLevel;
 }
 
 #pragma mark - UITableViewDelegate
@@ -136,8 +132,7 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
   UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 280, 40.0f)];
-  label.text = [NSString stringWithFormat:@"Current caffeine level is %@",
-                [[self energyFormatter] stringFromValue:[_cumulativeCaffeineLevel doubleValue] unit:NSMassFormatterUnitGram]];
+  label.text = [NSString stringWithFormat:@"Current caffeine level is %0.02f mg", [self.foodItems.firstObject cumulativeCaffeineLevel]];
   label.font = [UIFont boldSystemFontOfSize:16.0f];
 
   UIView *wrapper = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 40.0f)];

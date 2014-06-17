@@ -28,6 +28,8 @@
 		ADD2192E1950C9620061B4CF /* AAPLSleepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADD2192C1950C9620061B4CF /* AAPLSleepViewController.m */; };
 		ADD219311950C9D20061B4CF /* APPLSleepViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = ADD2192F1950C9D20061B4CF /* APPLSleepViewModel.h */; };
 		ADD219321950C9D20061B4CF /* APPLSleepViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = ADD219301950C9D20061B4CF /* APPLSleepViewModel.m */; };
+		ED1E04801950ECD800A4E7F5 /* AAPLConsumedFoodItem.h in Headers */ = {isa = PBXBuildFile; fileRef = ED1E047E1950ECD800A4E7F5 /* AAPLConsumedFoodItem.h */; };
+		ED1E04811950ECD800A4E7F5 /* AAPLConsumedFoodItem.m in Sources */ = {isa = PBXBuildFile; fileRef = ED1E047F1950ECD800A4E7F5 /* AAPLConsumedFoodItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,8 @@
 		ADD2192F1950C9D20061B4CF /* APPLSleepViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = APPLSleepViewModel.h; path = Sleep/APPLSleepViewModel.h; sourceTree = "<group>"; };
 		ADD219301950C9D20061B4CF /* APPLSleepViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = APPLSleepViewModel.m; path = Sleep/APPLSleepViewModel.m; sourceTree = "<group>"; };
 		ADD219331950C9E00061B4CF /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		ED1E047E1950ECD800A4E7F5 /* AAPLConsumedFoodItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLConsumedFoodItem.h; sourceTree = "<group>"; };
+		ED1E047F1950ECD800A4E7F5 /* AAPLConsumedFoodItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLConsumedFoodItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +136,8 @@
 				4ED6CAC019287256004BAD02 /* AAPLFoodPickerViewController.m */,
 				3E35E884192E68FF00C5BC4E /* AAPLFoodItem.h */,
 				3E35E885192E68FF00C5BC4E /* AAPLFoodItem.m */,
+				ED1E047E1950ECD800A4E7F5 /* AAPLConsumedFoodItem.h */,
+				ED1E047F1950ECD800A4E7F5 /* AAPLConsumedFoodItem.m */,
 			);
 			name = Journal;
 			sourceTree = "<group>";
@@ -164,6 +170,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E35E886192E68FF00C5BC4E /* AAPLFoodItem.h in Headers */,
+				ED1E04801950ECD800A4E7F5 /* AAPLConsumedFoodItem.h in Headers */,
 				4ED4B7FD19283674002C7E33 /* AAPLAppDelegate.h in Headers */,
 				4ED4B81E19283799002C7E33 /* AAPLProfileViewController.h in Headers */,
 				4ED6CAC119287256004BAD02 /* AAPLFoodPickerViewController.h in Headers */,
@@ -251,6 +258,7 @@
 				ADD2192E1950C9620061B4CF /* AAPLSleepViewController.m in Sources */,
 				4ED6CAC219287256004BAD02 /* AAPLFoodPickerViewController.m in Sources */,
 				4ED4B81F19283799002C7E33 /* AAPLProfileViewController.m in Sources */,
+				ED1E04811950ECD800A4E7F5 /* AAPLConsumedFoodItem.m in Sources */,
 				4ED4B7FB19283674002C7E33 /* main.m in Sources */,
 				4ED6CAC619287AE5004BAD02 /* AAPLEnergyViewController.m in Sources */,
 				4ED6CABA1928708D004BAD02 /* AAPLJournalViewController.m in Sources */,
