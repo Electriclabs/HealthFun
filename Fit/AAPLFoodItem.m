@@ -12,18 +12,18 @@
 
 @implementation AAPLFoodItem
 
-+ (instancetype)foodItemWithName:(NSString *)name joules:(double)joules {
++ (instancetype)foodItemWithName:(NSString *)name caffeineLevel:(double)caffeineLevel {
     AAPLFoodItem *foodItem = [[self alloc] init];
     
     foodItem.name = name;
-    foodItem.joules = joules;
+    foodItem.caffeineLevel = caffeineLevel;
 
     return foodItem;
 }
 
 - (BOOL)isEqual:(id)object {
     if ([object isKindOfClass:[AAPLFoodItem class]]) {
-        return [object joules] == self.joules && [self.name isEqualToString:[object name]];
+        return [object caffeineLevel] == self.caffeineLevel && [self.name isEqualToString:[object name]];
     }
     
     return NO;
@@ -32,7 +32,7 @@
 - (NSString *)description {
     return [@{
         @"name": self.name,
-        @"joules": @(self.joules)
+        @"caffeineLevel": @(self.caffeineLevel)
     } description];
 }
 

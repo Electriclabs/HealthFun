@@ -52,7 +52,7 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
     
     NSDate *endDate = [calendar dateByAddingUnit:NSCalendarUnitDay value:1 toDate:startDate options:0];
     
-    HKSampleType *sampleType = [HKSampleType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryCalories];
+    HKSampleType *sampleType = [HKSampleType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryChloride];
     NSPredicate *predicate = [HKQuery predicateForSamplesWithStartDate:startDate endDate:endDate options:HKQueryOptionNone];
 
     HKSampleQuery *query = [[HKSampleQuery alloc] initWithSampleType:sampleType predicate:predicate limit:0 sortDescriptors:nil resultsHandler:^(HKSampleQuery *query, NSArray *results, NSError *error) {
@@ -66,9 +66,9 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
             
             for (HKQuantitySample *sample in results) {
                 NSString *foodName = sample.metadata[HKMetadataKeyFoodType];
-                double joules = [sample.quantity doubleValueForUnit:[HKUnit jouleUnit]];
+                double caffeineLevel = [sample.quantity doubleValueForUnit:[HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli]];
                 
-                AAPLFoodItem *foodItem = [AAPLFoodItem foodItemWithName:foodName joules:joules];
+                AAPLFoodItem *foodItem = [AAPLFoodItem foodItemWithName:foodName caffeineLevel:caffeineLevel];
                 
                 [self.foodItems addObject:foodItem];
             }
@@ -81,9 +81,9 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
 }
 
 - (void)addFoodItem:(AAPLFoodItem *)foodItem {
-    HKQuantityType *quantityType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryCalories];
+    HKQuantityType *quantityType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryChloride];
 
-    HKQuantity *quantity = [HKQuantity quantityWithUnit:[HKUnit jouleUnit] doubleValue:foodItem.joules];
+    HKQuantity *quantity = [HKQuantity quantityWithUnit:[HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli] doubleValue:foodItem.caffeineLevel];
     
     NSDate *now = [NSDate date];
 
@@ -121,8 +121,8 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
 
     cell.textLabel.text = foodItem.name;
 
-    NSEnergyFormatter *energyFormatter = [self energyFormatter];
-    cell.detailTextLabel.text = [energyFormatter stringFromJoules:foodItem.joules];
+    NSMassFormatter *massFormatter = [self energyFormatter];
+    cell.detailTextLabel.text = [massFormatter stringFromValue:foodItem.caffeineLevel unit:NSMassFormatterUnitGram];
 
     return cell;
 }
@@ -139,15 +139,14 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
 
 #pragma mark - Convenience
 
-- (NSEnergyFormatter *)energyFormatter {
-    static NSEnergyFormatter *energyFormatter;
+- (NSMassFormatter *)energyFormatter {
+    static NSMassFormatter *energyFormatter;
     static dispatch_once_t onceToken;
     
     dispatch_once(&onceToken, ^{
-        energyFormatter = [[NSEnergyFormatter alloc] init];
+        energyFormatter = [[NSMassFormatter alloc] init];
         energyFormatter.unitStyle = NSFormattingUnitStyleLong;
-        energyFormatter.forFoodEnergyUse = YES;
-        energyFormatter.numberFormatter.maximumFractionDigits = 2;
+        energyFormatter.numberFormatter.maximumFractionDigits = 4;
     });
     
     return energyFormatter;

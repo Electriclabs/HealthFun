@@ -28,16 +28,15 @@ NSString *const AAPLFoodPickerViewControllerUnwindSegueIdentifier = @"AAPLFoodPi
 
     // A hard-coded list of possible food items. In your application, you can decide how these should be represented / created.
     self.foodItems = @[
-        [AAPLFoodItem foodItemWithName:@"Wheat Bagel" joules:240000.0],
-        [AAPLFoodItem foodItemWithName:@"Bran with Raisins" joules:190000.0],
-        [AAPLFoodItem foodItemWithName:@"Regular Instant Coffee" joules:1000.0],
-        [AAPLFoodItem foodItemWithName:@"Banana" joules:439320.0],
-        [AAPLFoodItem foodItemWithName:@"Cranberry Bagel" joules:416000.0],
-        [AAPLFoodItem foodItemWithName:@"Oatmeal" joules:150000.0],
-        [AAPLFoodItem foodItemWithName:@"Fruits Salad" joules:60000.0],
-        [AAPLFoodItem foodItemWithName:@"Fried Sea Bass" joules:200000.0],
-        [AAPLFoodItem foodItemWithName:@"Chips" joules:190000.0],
-        [AAPLFoodItem foodItemWithName:@"Chicken Taco" joules:170000.0]
+                       [AAPLFoodItem foodItemWithName:@"Coffee (brewed)" caffeineLevel:108],
+                       [AAPLFoodItem foodItemWithName:@"Coffee (drip)" caffeineLevel:145],
+                       [AAPLFoodItem foodItemWithName:@"Espresso" caffeineLevel:77],
+                       [AAPLFoodItem foodItemWithName:@"Coca Cola" caffeineLevel:34],
+                       [AAPLFoodItem foodItemWithName:@"Red Bull" caffeineLevel:80],
+                       [AAPLFoodItem foodItemWithName:@"Lucozade" caffeineLevel:36],
+                       [AAPLFoodItem foodItemWithName:@"Black Tea" caffeineLevel:42],
+                       [AAPLFoodItem foodItemWithName:@"Green Tea" caffeineLevel:25],
+                       [AAPLFoodItem foodItemWithName:@"Diet Coke" caffeineLevel:45]
     ];
 }
 
@@ -54,8 +53,8 @@ NSString *const AAPLFoodPickerViewControllerUnwindSegueIdentifier = @"AAPLFoodPi
     
     cell.textLabel.text = foodItem.name;
     
-    NSEnergyFormatter *energyFormatter = [self energyFormatter];
-    cell.detailTextLabel.text = [energyFormatter stringFromJoules:foodItem.joules];
+    NSMassFormatter *energyFormatter = [self energyFormatter];
+  cell.detailTextLabel.text = [energyFormatter stringFromValue:foodItem.caffeineLevel / 1000 unit:NSMassFormatterUnitGram];
 
     return cell;
 }
@@ -70,18 +69,17 @@ NSString *const AAPLFoodPickerViewControllerUnwindSegueIdentifier = @"AAPLFoodPi
     }
 }
 
-- (NSEnergyFormatter *)energyFormatter {
-    static NSEnergyFormatter *energyFormatter;
-    static dispatch_once_t onceToken;
-    
-    dispatch_once(&onceToken, ^{
-        energyFormatter = [[NSEnergyFormatter alloc] init];
-        energyFormatter.unitStyle = NSFormattingUnitStyleLong;
-        energyFormatter.forFoodEnergyUse = YES;
-        energyFormatter.numberFormatter.maximumFractionDigits = 2;
-    });
-    
-    return energyFormatter;
+- (NSMassFormatter *)energyFormatter {
+  static NSMassFormatter *energyFormatter;
+  static dispatch_once_t onceToken;
+
+  dispatch_once(&onceToken, ^{
+    energyFormatter = [[NSMassFormatter alloc] init];
+    energyFormatter.unitStyle = NSFormattingUnitStyleLong;
+    energyFormatter.numberFormatter.maximumFractionDigits = 4;
+  });
+
+  return energyFormatter;
 }
 
 @end
