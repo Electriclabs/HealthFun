@@ -14,11 +14,13 @@
 @import HealthKit;
 
 NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
+NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeineLevel";
 
 
 @interface AAPLJournalViewController()
 
 @property (nonatomic) NSMutableArray *foodItems;
+@property (nonatomic) HKQuantity *cumulativeCaffeineLevel;
 
 @end
 
@@ -52,7 +54,7 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
     
     NSDate *endDate = [calendar dateByAddingUnit:NSCalendarUnitDay value:1 toDate:startDate options:0];
     
-    HKSampleType *sampleType = [HKSampleType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryCalories];
+    HKSampleType *sampleType = [HKSampleType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryChloride];
     NSPredicate *predicate = [HKQuery predicateForSamplesWithStartDate:startDate endDate:endDate options:HKQueryOptionNone];
 
     HKSampleQuery *query = [[HKSampleQuery alloc] initWithSampleType:sampleType predicate:predicate limit:0 sortDescriptors:nil resultsHandler:^(HKSampleQuery *query, NSArray *results, NSError *error) {
@@ -63,12 +65,14 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.foodItems removeAllObjects];
-            
+			
+            self.cumulativeCaffeineLevel = [(HKQuantitySample *)results.firstObject metadata][AAPLCumulativeCaffeineLevelIdentifier];
+			
             for (HKQuantitySample *sample in results) {
                 NSString *foodName = sample.metadata[HKMetadataKeyFoodType];
-                double joules = [sample.quantity doubleValueForUnit:[HKUnit jouleUnit]];
+                double caffeineLevel = [sample.quantity doubleValueForUnit:[HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli]];
                 
-                AAPLFoodItem *foodItem = [AAPLFoodItem foodItemWithName:foodName joules:joules];
+                AAPLFoodItem *foodItem = [AAPLFoodItem foodItemWithName:foodName caffeineLevel:caffeineLevel];
                 
                 [self.foodItems addObject:foodItem];
             }
@@ -81,13 +85,16 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
 }
 
 - (void)addFoodItem:(AAPLFoodItem *)foodItem {
-    HKQuantityType *quantityType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryCalories];
+    HKQuantityType *quantityType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryChloride];
 
-    HKQuantity *quantity = [HKQuantity quantityWithUnit:[HKUnit jouleUnit] doubleValue:foodItem.joules];
+    HKQuantitySample *lastMeasurement = self.foodItems.firstObject;
+    NSNumber *cumulativeValue = [self newCaffeineLevelWithPreviousSample:lastMeasurement newFoodItem:foodItem];
+	
+    HKQuantity *quantity = [HKQuantity quantityWithUnit:[HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli] doubleValue:foodItem.caffeineLevel];
     
     NSDate *now = [NSDate date];
 
-    NSDictionary *metadata = @{ HKMetadataKeyFoodType:foodItem.name };
+    NSDictionary *metadata = @{ HKMetadataKeyFoodType:foodItem.name, AAPLCumulativeCaffeineLevelIdentifier:cumulativeValue };
     
     HKQuantitySample *calorieSample = [HKQuantitySample quantitySampleWithType:quantityType quantity:quantity startDate:now endDate:now metadata:metadata];
     
@@ -108,7 +115,36 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
     }];
 }
 
+- (NSNumber *)newCaffeineLevelWithPreviousSample:(HKQuantitySample *)sample newFoodItem:(AAPLFoodItem *)foodItem
+{
+    HKUnit *mgUnit = [HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli];
+    double initialCaffeineLevel = [sample.quantity doubleValueForUnit:mgUnit];
+    NSTimeInterval timeSinceConsumption = [sample.endDate timeIntervalSinceNow];
+    NSTimeInterval halfLife = 5.7 * 3600;
+
+    double currentCaffeineLevel = foodItem.caffeineLevel + initialCaffeineLevel * pow(0.5, timeSinceConsumption / halfLife);
+
+    return [NSNumber numberWithDouble:currentCaffeineLevel];
+}
+
 #pragma mark - UITableViewDelegate
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+  UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 280, 40.0f)];
+  label.text = [NSString stringWithFormat:@"Your current caffeine level is %@", @"0.0mg"];
+  label.font = [UIFont boldSystemFontOfSize:16.0f];
+
+  UIView *wrapper = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 40.0f)];
+  wrapper.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1];
+  [wrapper addSubview:label];
+  return wrapper;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+  return 40.0f;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.foodItems.count;
@@ -121,8 +157,8 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
 
     cell.textLabel.text = foodItem.name;
 
-    NSEnergyFormatter *energyFormatter = [self energyFormatter];
-    cell.detailTextLabel.text = [energyFormatter stringFromJoules:foodItem.joules];
+    NSMassFormatter *massFormatter = [self energyFormatter];
+    cell.detailTextLabel.text = [massFormatter stringFromValue:foodItem.caffeineLevel / 1000 unit:NSMassFormatterUnitGram];
 
     return cell;
 }
@@ -139,15 +175,14 @@ NSString *const AAPLJournalViewControllerTableViewCellReuseIdentifier = @"cell";
 
 #pragma mark - Convenience
 
-- (NSEnergyFormatter *)energyFormatter {
-    static NSEnergyFormatter *energyFormatter;
+- (NSMassFormatter *)energyFormatter {
+    static NSMassFormatter *energyFormatter;
     static dispatch_once_t onceToken;
     
     dispatch_once(&onceToken, ^{
-        energyFormatter = [[NSEnergyFormatter alloc] init];
+        energyFormatter = [[NSMassFormatter alloc] init];
         energyFormatter.unitStyle = NSFormattingUnitStyleLong;
-        energyFormatter.forFoodEnergyUse = YES;
-        energyFormatter.numberFormatter.maximumFractionDigits = 2;
+        energyFormatter.numberFormatter.maximumFractionDigits = 4;
     });
     
     return energyFormatter;

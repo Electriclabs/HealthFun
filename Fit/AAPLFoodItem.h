@@ -12,9 +12,9 @@
 
 @interface AAPLFoodItem : NSObject
 
-+ (instancetype)foodItemWithName:(NSString *)name joules:(double)joules;
++ (instancetype)foodItemWithName:(NSString *)name caffeineLevel:(double)caffeineLevel;
 
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic) double joules;
+@property (nonatomic) double caffeineLevel;
 
 @end
