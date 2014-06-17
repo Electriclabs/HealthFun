@@ -12,11 +12,12 @@
 
 @implementation AAPLFoodItem
 
-+ (instancetype)foodItemWithName:(NSString *)name caffeineLevel:(double)caffeineLevel {
++ (instancetype)foodItemWithName:(NSString *)name caffeineLevel:(double)caffeineLevel date:(NSDate *)date {
     AAPLFoodItem *foodItem = [[self alloc] init];
     
     foodItem.name = name;
     foodItem.caffeineLevel = caffeineLevel;
+  foodItem.date = date;
 
     return foodItem;
 }

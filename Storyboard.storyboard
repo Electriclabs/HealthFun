@@ -20,7 +20,7 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="X50-My-Fw4" id="rgk-rQ-vQl">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="years" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yfm-LK-6Q4">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="years" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yfm-LK-6Q4">
                                                     <rect key="frame" x="20" y="12" width="280" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -44,7 +44,7 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dQP-LI-FfP" id="4tz-jp-A8H">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pUA-lr-U4t">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pUA-lr-U4t">
                                                     <rect key="frame" x="20" y="8" width="212" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
@@ -52,7 +52,7 @@
                                                         <outlet property="delegate" destination="OFg-DF-CfS" id="IvR-nn-kqv"/>
                                                     </connections>
                                                 </textField>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="arN-Q2-8zA">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="arN-Q2-8zA">
                                                     <rect key="frame" x="240" y="11" width="60" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="60" id="2OO-av-9PD"/>
@@ -80,7 +80,7 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8ds-LL-s4s" id="nis-L4-tUe">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ebn-Hw-6y9">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ebn-Hw-6y9">
                                                     <rect key="frame" x="20" y="8" width="212" height="30"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
@@ -88,7 +88,7 @@
                                                         <outlet property="delegate" destination="OFg-DF-CfS" id="z6t-SD-Pyq"/>
                                                     </connections>
                                                 </textField>
-                                                <label appearanceType="aqua" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h7c-ar-05L">
+                                                <label appearanceType="aqua" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h7c-ar-05L">
                                                     <rect key="frame" x="240" y="11" width="60" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="60" id="B6X-CH-Pb8"/>
@@ -128,7 +128,7 @@
             </objects>
             <point key="canvasLocation" x="-635" y="1452"/>
         </scene>
-        <!--Journal View Controller - Food Journal-->
+        <!--Journal View Controller - Coffee Log-->
         <scene sceneID="FED-US-GP4">
             <objects>
                 <tableViewController id="URx-L3-AOT" customClass="AAPLJournalViewController" sceneMemberID="viewController">
@@ -163,7 +163,7 @@
                             <outlet property="delegate" destination="URx-L3-AOT" id="bfK-Fu-tnE"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Food Journal" id="F2q-wH-S0x">
+                    <navigationItem key="navigationItem" title="Coffee Log" id="F2q-wH-S0x">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="qGe-b9-Khi">
                             <connections>
                                 <segue destination="HJF-Qx-Gx9" kind="push" identifier="" id="YKe-4H-ezi"/>
@@ -175,7 +175,7 @@
             </objects>
             <point key="canvasLocation" x="-193" y="1452"/>
         </scene>
-        <!--Food Picker View Controller - Pick Food-->
+        <!--Food Picker View Controller - Add drink-->
         <scene sceneID="lwF-LC-sQo">
             <objects>
                 <tableViewController id="HJF-Qx-Gx9" customClass="AAPLFoodPickerViewController" sceneMemberID="viewController">
@@ -213,7 +213,7 @@
                             <outlet property="delegate" destination="HJF-Qx-Gx9" id="Jru-FV-rSu"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Pick Food" id="AI6-Xf-QzK"/>
+                    <navigationItem key="navigationItem" title="Add drink" id="AI6-Xf-QzK"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QBR-oU-mjg" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="vBb-b9-cZh" userLabel="Exit" sceneMemberID="exit"/>

@@ -28,15 +28,15 @@ NSString *const AAPLFoodPickerViewControllerUnwindSegueIdentifier = @"AAPLFoodPi
 
     // A hard-coded list of possible food items. In your application, you can decide how these should be represented / created.
     self.foodItems = @[
-                       [AAPLFoodItem foodItemWithName:@"Coffee (brewed)" caffeineLevel:108],
-                       [AAPLFoodItem foodItemWithName:@"Coffee (drip)" caffeineLevel:145],
-                       [AAPLFoodItem foodItemWithName:@"Espresso" caffeineLevel:77],
-                       [AAPLFoodItem foodItemWithName:@"Coca Cola" caffeineLevel:34],
-                       [AAPLFoodItem foodItemWithName:@"Red Bull" caffeineLevel:80],
-                       [AAPLFoodItem foodItemWithName:@"Lucozade" caffeineLevel:36],
-                       [AAPLFoodItem foodItemWithName:@"Black Tea" caffeineLevel:42],
-                       [AAPLFoodItem foodItemWithName:@"Green Tea" caffeineLevel:25],
-                       [AAPLFoodItem foodItemWithName:@"Diet Coke" caffeineLevel:45]
+                       [AAPLFoodItem foodItemWithName:@"Coffee (brewed)" caffeineLevel:108 date:nil],
+                       [AAPLFoodItem foodItemWithName:@"Coffee (drip)" caffeineLevel:145 date:nil],
+                       [AAPLFoodItem foodItemWithName:@"Espresso" caffeineLevel:77 date:nil],
+                       [AAPLFoodItem foodItemWithName:@"Coca Cola" caffeineLevel:34 date:nil],
+                       [AAPLFoodItem foodItemWithName:@"Red Bull" caffeineLevel:80 date:nil],
+                       [AAPLFoodItem foodItemWithName:@"Lucozade" caffeineLevel:36 date:nil],
+                       [AAPLFoodItem foodItemWithName:@"Black Tea" caffeineLevel:42 date:nil],
+                       [AAPLFoodItem foodItemWithName:@"Green Tea" caffeineLevel:25 date:nil],
+                       [AAPLFoodItem foodItemWithName:@"Diet Coke" caffeineLevel:45 date:nil]
     ];
 }
 

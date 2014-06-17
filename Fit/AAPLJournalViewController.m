@@ -20,7 +20,7 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
 @interface AAPLJournalViewController()
 
 @property (nonatomic) NSMutableArray *foodItems;
-@property (nonatomic) HKQuantity *cumulativeCaffeineLevel;
+@property (nonatomic) NSNumber *cumulativeCaffeineLevel;
 
 @end
 
@@ -66,13 +66,13 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.foodItems removeAllObjects];
 			
-            self.cumulativeCaffeineLevel = [(HKQuantitySample *)results.firstObject metadata][AAPLCumulativeCaffeineLevelIdentifier];
+            self.cumulativeCaffeineLevel = [(HKQuantitySample *)results.lastObject metadata][AAPLCumulativeCaffeineLevelIdentifier];
 			
             for (HKQuantitySample *sample in results) {
                 NSString *foodName = sample.metadata[HKMetadataKeyFoodType];
                 double caffeineLevel = [sample.quantity doubleValueForUnit:[HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli]];
                 
-                AAPLFoodItem *foodItem = [AAPLFoodItem foodItemWithName:foodName caffeineLevel:caffeineLevel];
+              AAPLFoodItem *foodItem = [AAPLFoodItem foodItemWithName:foodName caffeineLevel:caffeineLevel date:sample.endDate];
                 
                 [self.foodItems addObject:foodItem];
             }
@@ -84,11 +84,15 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
     [self.healthStore executeQuery:query];
 }
 
-- (void)addFoodItem:(AAPLFoodItem *)foodItem {
+- (void)addFoodItem:(AAPLFoodItem *)originalFoodItem {
+    AAPLFoodItem *foodItem = [AAPLFoodItem foodItemWithName:originalFoodItem.name caffeineLevel:originalFoodItem.caffeineLevel
+                                                       date:[NSDate date]];
+
     HKQuantityType *quantityType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDietaryChloride];
 
-    HKQuantitySample *lastMeasurement = self.foodItems.firstObject;
+    AAPLFoodItem *lastMeasurement = self.foodItems.firstObject;
     NSNumber *cumulativeValue = [self newCaffeineLevelWithPreviousSample:lastMeasurement newFoodItem:foodItem];
+  _cumulativeCaffeineLevel = cumulativeValue;
 	
     HKQuantity *quantity = [HKQuantity quantityWithUnit:[HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli] doubleValue:foodItem.caffeineLevel];
     
@@ -106,6 +110,7 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
                 NSIndexPath *indexPathForInsertedFoodItem = [NSIndexPath indexPathForRow:0 inSection:0];
                 
                 [self.tableView insertRowsAtIndexPaths:@[indexPathForInsertedFoodItem] withRowAnimation:UITableViewRowAnimationAutomatic];
+              [self.tableView reloadData];
             }
             else {
                 NSLog(@"An error occured saving the food %@. In your app, try to handle this gracefully. The error was: %@.", foodItem.name, error);
@@ -115,11 +120,10 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
     }];
 }
 
-- (NSNumber *)newCaffeineLevelWithPreviousSample:(HKQuantitySample *)sample newFoodItem:(AAPLFoodItem *)foodItem
+- (NSNumber *)newCaffeineLevelWithPreviousSample:(AAPLFoodItem *)sample newFoodItem:(AAPLFoodItem *)foodItem
 {
-    HKUnit *mgUnit = [HKUnit gramUnitWithMetricPrefix:HKMetricPrefixMilli];
-    double initialCaffeineLevel = [sample.quantity doubleValueForUnit:mgUnit];
-    NSTimeInterval timeSinceConsumption = [sample.endDate timeIntervalSinceNow];
+    double initialCaffeineLevel = sample.caffeineLevel;
+    NSTimeInterval timeSinceConsumption = [sample.date timeIntervalSinceNow];
     NSTimeInterval halfLife = 5.7 * 3600;
 
     double currentCaffeineLevel = foodItem.caffeineLevel + initialCaffeineLevel * pow(0.5, timeSinceConsumption / halfLife);
@@ -132,7 +136,8 @@ NSString *const AAPLCumulativeCaffeineLevelIdentifier = @"AAPLCumulativeCaffeine
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
   UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 280, 40.0f)];
-  label.text = [NSString stringWithFormat:@"Your current caffeine level is %@", @"0.0mg"];
+  label.text = [NSString stringWithFormat:@"Current caffeine level is %@",
+                [[self energyFormatter] stringFromValue:[_cumulativeCaffeineLevel doubleValue] unit:NSMassFormatterUnitGram]];
   label.font = [UIFont boldSystemFontOfSize:16.0f];
 
   UIView *wrapper = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320.0f, 40.0f)];
